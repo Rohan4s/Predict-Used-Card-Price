@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:predict_used_car_price/home/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,9 +17,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const Home(),
+      home:  const HomeScreen(),
     );
   }
 }
 
-}
