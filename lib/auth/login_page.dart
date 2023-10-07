@@ -12,23 +12,31 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final ValueNotifier<bool> isLogin = ValueNotifier<bool>(true);
   final ValueNotifier<String> errorMessage = ValueNotifier<String>('');
-
+  final ValueNotifier<bool> processing = ValueNotifier<bool>(false);
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> signIn() async {
     try {
       await Auth().signIn(email: _emailController.text, password: _passwordController.text);
+
     } on FirebaseAuthException catch (e) {
       errorMessage.value = e.message!;
     }
   }
 
   Future<void> createAccount() async {
-    try {
-      await Auth().signUp(email: _emailController.text, password: _passwordController.text);
-    } on FirebaseAuthException catch (e) {
-      errorMessage.value = e.message!;
+    if (_emailController.value.text.isEmpty || _passwordController.value.text.isEmpty) {
+      errorMessage.value = 'Please enter email and password';
+      return;
+    } else {
+      processing.value = true;
+      try {
+        await Auth().signUp(email: _emailController.text, password: _passwordController.text);
+      } on FirebaseAuthException catch (e) {
+        errorMessage.value = e.message!;
+      }
+      processing.value = false;
     }
   }
 
@@ -43,7 +51,6 @@ class _LoginPageState extends State<LoginPage> {
       },
     );
   }
-
 
   final TextStyle submitTextStyle = TextStyle(
     color: Colors.teal[200],
@@ -118,13 +125,18 @@ class _LoginPageState extends State<LoginPage> {
                   return TextButton(
                     onPressed: () => isLogin.value = !isLogin.value,
                     child: Text(
-                      value ? 'Register Instead?' : 'Login Instead?',
+                      value ? 'Don\'t Have An Account?' : 'Already Have an Account?',
                       style: TextStyle(
                         color: Colors.teal[200],
                         fontSize: 12,
                       ),
                     ),
                   );
+                }),
+            ValueListenableBuilder(
+                valueListenable: processing,
+                builder: (BuildContext context, bool value, Widget? child) {
+                  return value? const CircularProgressIndicator() : const SizedBox();
                 }),
           ],
         ),

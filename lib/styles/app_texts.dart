@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppTexts {
   AppTexts._();
   static const String appName = 'Predict Used Car Price';
+  static const String homeTitle = 'Car Hub';
 
   //form names
   static const String modelName = 'car_model';
@@ -24,6 +25,9 @@ class AppTexts {
   static const String engineCapacityLabel = 'Enter Engine Capacity';
   static const String millageLabel = 'Enter Millage';
   static const String predictLabel = 'PREDICT PRICE';
+  static const String buyLabel = 'BUY';
+  static const String sellLabel = 'SELL';
+  static const String signOutLabel = 'Sign Out';
 
 
   //Configurations
@@ -33,6 +37,7 @@ class AppTexts {
   static const String twitterURL = ' ';//SET your twitter url here
   static const String linkedinURL = ' ';//SET your linkedin url here
   static const String githubURL = ' ';//SET your github url here
+
 
 
 

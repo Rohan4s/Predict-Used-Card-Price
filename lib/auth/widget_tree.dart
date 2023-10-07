@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:predict_used_car_price/auth/auth.dart';
+import 'package:predict_used_car_price/home/home_screen.dart';
 import 'package:predict_used_car_price/predict_price/predict_price_screen.dart';
 import 'package:predict_used_car_price/auth/login_page.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class _WidgetTreeState extends State<WidgetTree> {
         stream: Auth().authStateChanges,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const PredictPrice();
+            return HomeScreen();
           } else {
             return const LoginPage();
           }

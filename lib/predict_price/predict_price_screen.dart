@@ -6,6 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:predict_used_car_price/auth/widget_tree.dart';
 import 'package:predict_used_car_price/data/data.dart';
 import 'package:predict_used_car_price/styles/app_texts.dart';
 import 'package:http/http.dart' as http;
@@ -24,7 +25,13 @@ class _PredictPriceState extends State<PredictPrice> {
   final User? user = Auth().currentUser;
 
   Future<void> signOut() async {
-    await Auth().signOut();
+    Auth().signOut().then((value) => Navigator.popUntil(context, (route) => route.isFirst));
+    // if (context.mounted) {
+    //   Navigator.of(context).pushAndRemoveUntil(
+    //     MaterialPageRoute(builder: (BuildContext context) => const WidgetTree()),
+    //     (Route<dynamic> route) => false, // Remove all previous routes from the stack
+    //   );
+    // }
   }
 
   Widget _userUid() {
@@ -35,7 +42,7 @@ class _PredictPriceState extends State<PredictPrice> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   static const double tilePadding = 20;
   final TextStyle labelStyle = const TextStyle(
-    color: Colors.white,
+    color: Colors.black,
     fontWeight: FontWeight.w300,
     fontSize: 12,
   );
@@ -49,13 +56,13 @@ class _PredictPriceState extends State<PredictPrice> {
     fontSize: 12,
     // fontWeight: FontWeight.w300,
   );
-  final TextStyle submitTextStyle = TextStyle(
-    color: Colors.teal[200],
+  final TextStyle submitTextStyle = const TextStyle(
+    color: Colors.white,
     fontSize: 12,
     // fontWeight: FontWeight.w300,
   );
   final ButtonStyle submitButtonStyle = ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey[900]!),
+    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey[700]!),
     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
       RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
@@ -71,9 +78,10 @@ class _PredictPriceState extends State<PredictPrice> {
 
   Widget _signOutButton() {
     return TextButton(
+      // onPressed: () async => await FirebaseAuth.instance.signOut(),
       onPressed: signOut,
       child: const Text(
-        'Sign Out',
+        AppTexts.signOutLabel,
         style: TextStyle(color: Colors.white),
       ),
     );
@@ -81,6 +89,7 @@ class _PredictPriceState extends State<PredictPrice> {
 
   @override
   void initState() {
+    print(user?.email);
     super.initState();
   }
 
@@ -88,6 +97,7 @@ class _PredictPriceState extends State<PredictPrice> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           AppTexts.appName,
           style: TextStyle(
@@ -101,7 +111,7 @@ class _PredictPriceState extends State<PredictPrice> {
         backgroundColor: Colors.blueGrey[700],
       ),
       body: Container(
-        color: Colors.blueGrey[900],
+        // color: Colors.blueGrey[900],
         height: double.infinity,
         child: FormBuilder(
           key: _formKey,
@@ -373,6 +383,56 @@ class _PredictPriceState extends State<PredictPrice> {
     );
   }
 
+  Widget footer() {
+    return GNav(
+      rippleColor: Colors.grey,
+      hoverColor: Colors.grey,
+      haptic: true,
+      tabBorderRadius: 15,
+      tabActiveBorder: Border.all(color: Colors.black, width: 1),
+      tabBorder: Border.all(color: Colors.grey, width: 1),
+      tabShadow: [BoxShadow(color: Colors.grey.withOpacity(0.5), blurRadius: 8)],
+      curve: Curves.easeOutExpo,
+      duration: const Duration(milliseconds: 900),
+      gap: 8,
+      color: Colors.grey[800],
+      iconSize: 24,
+      tabBackgroundColor: Colors.purple.withOpacity(0.1),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      // navigation bar padding
+      tabs: [
+        GButton(
+          icon: Icons.facebook,
+          text: 'Facebook',
+          onPressed: () async {
+            _launchUrl(AppTexts.fbURL);
+          },
+        ),
+        GButton(
+          icon: FontAwesomeIcons.twitter,
+          text: 'Twitter',
+          onPressed: () async {
+            _launchUrl(AppTexts.twitterURL);
+          },
+        ),
+        GButton(
+          icon: FontAwesomeIcons.linkedin,
+          text: 'LinkedIn',
+          onPressed: () async {
+            _launchUrl(AppTexts.linkedinURL);
+          },
+        ),
+        GButton(
+          icon: FontAwesomeIcons.github,
+          text: 'Github',
+          onPressed: () async {
+            _launchUrl(AppTexts.githubURL);
+          },
+        ),
+      ],
+    );
+  }
+
   void getData() async {
     if (_formKey.currentState!.saveAndValidate()) {
       try {
@@ -441,7 +501,7 @@ class _PredictPriceState extends State<PredictPrice> {
   void _launchUrl(String _url) async {
     final Uri url = Uri.parse(_url);
     if (await canLaunchUrl(url)) {
-      launchUrl(url);
+      await launchUrl(url);
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 class DataClass {
   DataClass._();
 
@@ -178,4 +180,16 @@ class DataClass {
     'CNG and OIL',
     'LPG and OIL',
   ];
+
+  static const List<String> images = [
+    'assets/bg-1.jpg',
+    'assets/bg-2.jpg',
+    'assets/bg-3.jpg',
+    'assets/bg-4.jpg',
+    'assets/bg-5.jpg',
+    'assets/bg-6.jpg',
+    'assets/bg-7.jpg',
+    'assets/bg-8.jpg',
+  ];
+  static const Duration animationDuration = Duration(seconds: 4);
 }
