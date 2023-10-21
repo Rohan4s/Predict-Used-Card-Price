@@ -26,12 +26,6 @@ class _PredictPriceState extends State<PredictPrice> {
 
   Future<void> signOut() async {
     Auth().signOut().then((value) => Navigator.popUntil(context, (route) => route.isFirst));
-    // if (context.mounted) {
-    //   Navigator.of(context).pushAndRemoveUntil(
-    //     MaterialPageRoute(builder: (BuildContext context) => const WidgetTree()),
-    //     (Route<dynamic> route) => false, // Remove all previous routes from the stack
-    //   );
-    // }
   }
 
   Widget _userUid() {
@@ -42,7 +36,7 @@ class _PredictPriceState extends State<PredictPrice> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   static const double tilePadding = 20;
   final TextStyle labelStyle = const TextStyle(
-    color: Colors.black,
+    color: Colors.white,
     fontWeight: FontWeight.w300,
     fontSize: 12,
   );
@@ -56,17 +50,17 @@ class _PredictPriceState extends State<PredictPrice> {
     fontSize: 12,
     // fontWeight: FontWeight.w300,
   );
-  final TextStyle submitTextStyle = const TextStyle(
-    color: Colors.white,
+  final TextStyle submitTextStyle =  TextStyle(
+    color: Colors.teal[200],
     fontSize: 12,
     // fontWeight: FontWeight.w300,
   );
   final ButtonStyle submitButtonStyle = ButtonStyle(
-    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey[700]!),
+    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey[900]!),
     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
       RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
-        side: const BorderSide(color: Colors.white),
+        side: const BorderSide(color: Colors.teal),
       ),
     ),
   );
@@ -111,7 +105,7 @@ class _PredictPriceState extends State<PredictPrice> {
         backgroundColor: Colors.blueGrey[700],
       ),
       body: Container(
-        // color: Colors.blueGrey[900],
+        color: Colors.blueGrey[900],
         height: double.infinity,
         child: FormBuilder(
           key: _formKey,

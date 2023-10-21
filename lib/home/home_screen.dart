@@ -20,20 +20,30 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final AppinioSwiperController controller = AppinioSwiperController();
   final List<String> imagesPath = data.DataClass.images;
+
   final ButtonStyle buttonStyle = ButtonStyle(
     fixedSize: MaterialStateProperty.all<Size>(const Size(200, 50)),
-    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey[700]!),
+    backgroundColor: MaterialStateProperty.all<Color>(Colors.blueGrey[900]!),
     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
       RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18.0),
-        side: const BorderSide(color: Colors.white),
+        side: const BorderSide(color: Colors.teal),
       ),
     ),
   );
-  final TextStyle textStyle = const TextStyle(
-    color: Colors.white,
+  final TextStyle textStyle = TextStyle(
+    color: Colors.teal[200],
     fontSize: 16,
     // fontWeight: FontWeight.w300,
+  );
+  final TextStyle signoutTextStyle = const TextStyle(
+    color: Colors.grey,
+    fontWeight: FontWeight.bold,
+  );
+  final TextStyle appNameTextStyle = const TextStyle(
+    color: Colors.grey,
+    fontSize: 40,
+    fontWeight: FontWeight.bold,
   );
   bool _shouldRunAnimation = true;
   bool _forwardAnimation = true;
@@ -53,18 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  // Future<void> _runAnimation() async {
-  //   while (_shouldRunAnimation) {
-  //     swipeTimer = await Future.delayed(const Duration(seconds: 5));
-  //     if (_forwardAnimation) {
-  //       print('swipe right');
-  //       controller.swipeRight();
-  //     } else {
-  //       print('unswipe');
-  //       controller.unswipe();
-  //     }
-  //   }
-  // }
   Future<void> _runAnimation() async {
     swipeTimer = Timer.periodic(data.DataClass.animationDuration, (timer) {
       if (!_shouldRunAnimation) {
@@ -92,99 +90,110 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.teal[200]),
-          title: const Text(
+          title: Text(
             AppTexts.homeTitle,
-            style: TextStyle(fontSize: 40, color: Colors.white),
+            style: appNameTextStyle,
           ),
           backgroundColor: Colors.blueGrey[700],
           centerTitle: true,
           actions: [
             TextButton(
               onPressed: () async => await FirebaseAuth.instance.signOut(),
-              child: const Text(AppTexts.signOutLabel, style: TextStyle(color: Colors.white)),
+              child: Text(
+                AppTexts.signOutLabel,
+                style: signoutTextStyle,
+              ),
             ),
           ],
         ),
-        body: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 30),
-            TextButton(
-              onPressed: () {
-                _shouldRunAnimation = false;
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) => const PredictPrice()))
-                    .then((value) {
-                  _shouldRunAnimation = true;
-                  _runAnimation();
-                });
-              },
-              style: buttonStyle,
-              child: Text(
-                AppTexts.predictLabel,
-                style: textStyle,
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: null,
-              style: buttonStyle,
-              child: Text(
-                AppTexts.buyLabel,
-                style: textStyle,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextButton(
-              onPressed: null,
-              style: buttonStyle,
-              child: Text(
-                AppTexts.sellLabel,
-                style: textStyle,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Expanded(
-              child: AppinioSwiper(
-                cardsBuilder: (context, int index) => index == currentIndex
-                    ? Image.asset(
-                        imagesPath[index],
-                        fit: BoxFit.cover,
-                      )
-                    : SizedBox(
-                        height: 500,
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: Image.asset(imagesPath[index]),
-                      ),
-                unlimitedUnswipe: true,
-                onSwipe: (int index, direction) {
-                  print(index);
-                  currentIndex++;
-                  if (_forwardAnimation && currentIndex == imagesPath.length - 1) {
-                    _forwardAnimation = false;
-                  }
+        body: Container(
+          color: Colors.blueGrey[900],
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 30),
+              TextButton(
+                onPressed: () {
+                  _shouldRunAnimation = false;
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) => const PredictPrice()))
+                      .then((value) {
+                    _shouldRunAnimation = true;
+                    _runAnimation();
+                  });
                 },
-                unswipe: (_) {
-                  print('at unswipe ${currentIndex - 1}');
-                  currentIndex--;
-                  if (_forwardAnimation == false && currentIndex <= 0) {
-                    _forwardAnimation = true;
-                  }
-                },
-                cardsCount: imagesPath.length,
-                backgroundCardsCount: 1,
-                controller: controller,
+                style: buttonStyle,
+                child: Text(
+                  AppTexts.predictLabel,
+                  style: textStyle,
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: footer(),
-            ),
-            const SizedBox(height: 5),
-          ],
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: null,
+                style: buttonStyle,
+                child: Text(
+                  AppTexts.buyLabel,
+                  style: textStyle,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              TextButton(
+                onPressed: null,
+                style: buttonStyle,
+                child: Text(
+                  AppTexts.sellLabel,
+                  style: textStyle,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: AppinioSwiper(
+                  padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                  duration: const Duration(milliseconds: 600),
+                  cardsBuilder: (context, int index) => index == currentIndex
+                      ? Image.asset(
+                          imagesPath[index],
+                          fit: BoxFit.cover,
+                        )
+                      : FractionallySizedBox(
+                          heightFactor: 0.9,
+                          widthFactor: 1,
+                          child: Image.asset(
+                            imagesPath[index],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                  unlimitedUnswipe: true,
+                  onSwipe: (int index, direction) {
+                    print(index);
+                    currentIndex++;
+                    if (_forwardAnimation && currentIndex == imagesPath.length - 1) {
+                      _forwardAnimation = false;
+                    }
+                  },
+                  unswipe: (_) {
+                    print('at unswipe ${currentIndex - 1}');
+                    currentIndex--;
+                    if (_forwardAnimation == false && currentIndex <= 0) {
+                      _forwardAnimation = true;
+                    }
+                  },
+                  cardsCount: imagesPath.length,
+                  backgroundCardsCount: 1,
+                  controller: controller,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: footer(),
+              ),
+              const SizedBox(height: 5),
+            ],
+          ),
         ),
       ),
     );
